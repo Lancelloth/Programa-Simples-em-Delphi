@@ -1,0 +1,45 @@
+Nome do Banco de Dados  : vendas
+
+
+#################### CREATE DAS TABELAS DO BANCO ####################
+ 
+CREATE TABLE public.cliente
+(
+  id integer NOT NULL DEFAULT nextval('cliente_id_seq'::regclass),
+  nome character varying(50),
+  codigo character varying(15),
+  CONSTRAINT "pk_idCliente" PRIMARY KEY (id)
+);
+
+CREATE TABLE public.itemnota
+(
+  id integer NOT NULL DEFAULT nextval('itemnota_id_seq'::regclass),
+  idproduto integer,
+  idnotafiscal integer,
+  quantidade integer,
+  CONSTRAINT pk_iditemnota PRIMARY KEY (id),
+  CONSTRAINT fk_idnota FOREIGN KEY (idnotafiscal)
+      REFERENCES public.notafiscal (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT fk_idproduto FOREIGN KEY (idproduto)
+      REFERENCES public.produto (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+CREATE TABLE public.notafiscal
+(
+  id integer NOT NULL DEFAULT nextval('notafiscal_id_seq'::regclass),
+  idcliente integer NOT NULL,
+  numeronota character varying(20),
+  datanota date NOT NULL,
+  CONSTRAINT "Pk_idNotaFiscal" PRIMARY KEY (id),
+  CONSTRAINT fk_idcliente FOREIGN KEY (idcliente)
+      REFERENCES public.cliente (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+CREATE TABLE public.produto
+(
+  id integer NOT NULL DEFAULT nextval('produto_id_seq'::regclass),
+  descricao character varying(30) NOT NULL,
+  valor numeric NOT NULL,
+  CONSTRAINT "PK_idProduto" PRIMARY KEY (id)
+);
